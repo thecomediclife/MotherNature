@@ -20,19 +20,23 @@ public class TreeController : MonoBehaviour {
 	public bool activateLift;
 	public Transform lift;
 	public float liftSpeed = 0.6f;
-	float liftDest;
+	float liftMax;
+	float liftMin;
 
 	public GameObject treeMesh;
 	float treeHeight;
-	
+
+	private Transform player;
 
 
 	void Start ()
 	{
 		treeMesh.transform.localScale = new Vector3 (1, 0, 1);
 
+		//	Max out lift destination at tree's height
 		treeHeight = GetComponent<Collider> ().bounds.size.y;
-		liftDest = treeHeight - 0.5f;
+		liftMax = treeHeight - 0.5f;
+		liftMin = -0.5f;
 
 		timer = Time.time;
 		scale = 0f;
@@ -61,8 +65,8 @@ public class TreeController : MonoBehaviour {
 	{
 		//	Move lift up
 		lift.Translate (Vector3.up * Time.deltaTime * liftSpeed);
-		if (lift.localPosition.y > liftDest)
-			lift.localPosition = new Vector3 (0, liftDest, 0);
+		if (lift.localPosition.y > liftMax)
+			lift.localPosition = new Vector3 (0, liftMax, 0);
 
 		//	Animation
 		percGrow += Time.deltaTime * growSpeed;
@@ -73,41 +77,39 @@ public class TreeController : MonoBehaviour {
 	{
 		//	Move lift down
 		lift.Translate (-Vector3.up * Time.deltaTime * liftSpeed);
+		if (lift.localPosition.y < liftMin) 
+		{
+			Destroy (gameObject);
+			player.parent = null;
+		}
 
 		//	Animation
 		percRot += Time.deltaTime * growSpeed;
 		scale = Mathf.Lerp (1f, 0f, percRot);
-
-		//	Destroy tree object when fully rot
-		if (percRot > 1f)
-			Destroy (gameObject);
 	}
 
 	void OnTriggerStay (Collider other) 
 	{
 		if (other.tag == "Player") 
 		{
-			print ("on lift");
-			other.gameObject.transform.parent = lift;
-		}
-
-		if (other != null) {
-			print ("blah");
+			player = other.gameObject.transform;
+			player.parent = lift;
+			//  other.gameObject.transform.parent = lift;
 		}
 	}
 
-	void OnCollisionStay (Collision other) 
-	{
-//		if (other != null) {
-//			print ("blah");
+//	void OnCollisionStay (Collision other) 
+//	{
+////		if (other != null) {
+////			print ("blah");
+////		}
+//
+//		if (other.transform.tag == "Player") 
+//		{
+//			print ("on lift");
+//			other.gameObject.transform.parent = lift;
 //		}
-
-		if (other.transform.tag == "Player") 
-		{
-			print ("on lift");
-			other.gameObject.transform.parent = lift;
-		}
-	}
+//	}
 
 
 
