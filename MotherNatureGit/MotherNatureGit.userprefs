@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ButtonStayOn.cs">
+    <Files>
+      <File FileName="Assets/Scripts/ButtonFlick.cs" Line="6" Column="2" />
+      <File FileName="Assets/Scripts/ButtonPermanent.cs" Line="21" Column="21" />
+      <File FileName="Assets/Scripts/ButtonStayOn.cs" Line="18" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
