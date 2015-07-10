@@ -80,7 +80,8 @@ public class TreeController : MonoBehaviour {
 		if (lift.localPosition.y < liftMin) 
 		{
 			Destroy (gameObject);
-			player.parent = null;
+			if (player.parent != null)
+				player.parent = null;
 		}
 
 		//	Animation
@@ -92,6 +93,7 @@ public class TreeController : MonoBehaviour {
 	{
 		if (other.tag == "Player") 
 		{
+			print ("on lift");
 			player = other.gameObject.transform;
 			player.parent = lift;
 			//  other.gameObject.transform.parent = lift;
