@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\ButtonStayOn.cs" />
      <Compile Include="Assets\Scripts\CharController.cs" />
      <Compile Include="Assets\Scripts\CharController2.cs" />
+     <Compile Include="Assets\Scripts\CharController3.cs" />
      <Compile Include="Assets\Scripts\OrbitalCamera.cs" />
      <Compile Include="Assets\Scripts\SpawnTree.cs" />
      <Compile Include="Assets\Scripts\TreeController.cs" />
