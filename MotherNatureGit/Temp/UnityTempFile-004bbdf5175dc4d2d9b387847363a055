@@ -72,6 +72,7 @@
 'Assets/Scripts/ButtonStayOn.cs'
 'Assets/Scripts/CharController.cs'
 'Assets/Scripts/CharController2.cs'
+'Assets/Scripts/CharController3.cs'
 'Assets/Scripts/OrbitalCamera.cs'
 'Assets/Scripts/SpawnTree.cs'
 'Assets/Scripts/TreeController.cs'

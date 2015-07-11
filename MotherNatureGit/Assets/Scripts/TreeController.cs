@@ -22,6 +22,7 @@ public class TreeController : MonoBehaviour {
 	public float liftSpeed = 0.6f;
 	float liftMax;
 	float liftMin;
+	public Vector3 liftTop;
 
 	public GameObject treeMesh;
 	float treeHeight;
@@ -35,8 +36,10 @@ public class TreeController : MonoBehaviour {
 
 		//	Max out lift destination at tree's height
 		treeHeight = GetComponent<Collider> ().bounds.size.y;
-		liftMax = treeHeight - 0.5f;
+//		liftMax = treeHeight - 0.5f;
+		liftMax = 1.5f;
 		liftMin = -0.5f;
+		liftTop = lift.position + new Vector3 (0, lift.GetComponent<Collider> ().bounds.size.y / 2, 0);
 
 		timer = Time.time;
 		scale = 0f;
@@ -59,14 +62,19 @@ public class TreeController : MonoBehaviour {
 		//	Rot after a certain amount of time
 		if (Time.time > timer + interval)
 			growing = false;
+
+		print (liftMax + "   " + lift.localPosition);
 	}
 
 	void Grow () 
 	{
 		//	Move lift up
 		lift.Translate (Vector3.up * Time.deltaTime * liftSpeed);
-		if (lift.localPosition.y > liftMax)
+		if (lift.localPosition.y > liftMax) 
+		{
 			lift.localPosition = new Vector3 (0, liftMax, 0);
+			player.GetComponent<CharController2>().OffElevator();
+		}
 
 		//	Animation
 		percGrow += Time.deltaTime * growSpeed;
@@ -81,7 +89,10 @@ public class TreeController : MonoBehaviour {
 		{
 			Destroy (gameObject);
 			if (player.parent != null)
+			{
 				player.parent = null;
+				player.GetComponent<CharController2>().OffElevator();
+			}
 		}
 
 		//	Animation
@@ -96,6 +107,14 @@ public class TreeController : MonoBehaviour {
 			print ("on lift");
 			player = other.gameObject.transform;
 			player.parent = lift;
+
+			if (!activateLift)
+			{
+				player.GetComponent<CharController2>().OnElevator(liftTop + new Vector3(0f,1.5f,0f));
+				activateLift = true;
+			}
+
+
 			//  other.gameObject.transform.parent = lift;
 		}
 	}
