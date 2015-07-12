@@ -25,14 +25,15 @@ public class TreeController2 : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (growing) {
-			if (Input.GetButtonDown ("Fire1")) {
+			if (Input.GetButtonDown ("Fire1") && !moving) {
 				if (player != null) {
-					player.GetComponent<CharControllerTest> ().PauseMove ();
+					player.GetComponent<CharController3> ().PauseMove();
 
-					if (Vector3.Distance (player.transform.position, transform.position + new Vector3 (0, 1.5f, 0)) < 0.01) {
+					if (Vector3.Distance (player.transform.position, transform.position + new Vector3 (0, 1.0f, 0)) < 0.01) {
 						player.transform.parent = platform;
+						Debug.Log ("test");
 					} else {
-						player.GetComponent<CharControllerTest> ().ContinueMove ();
+						player.GetComponent<CharController3> ().ContinueMove ();
 					}
 				}
 				moving = true;
@@ -48,20 +49,20 @@ public class TreeController2 : MonoBehaviour {
 					moving = false;
 					growing = false;
 					if (player != null) {
-						player.GetComponent<CharControllerTest>().ContinueMove();
+						player.GetComponent<CharController3>().ContinueMove();
 						player.transform.parent = null;
 					}
 				}
 			}
 		} else if (!growing) {
-			if (Input.GetButtonDown ("Fire1")) {
+			if (Input.GetButtonDown ("Fire1") && !moving) {
 				if (player != null) {
-					player.GetComponent<CharControllerTest> ().PauseMove ();
+					player.GetComponent<CharController3> ().PauseMove ();
 					
-					if (Vector3.Distance (player.transform.position, transform.position + new Vector3 (0, 3.5f, 0)) < 0.01) {
+					if (Vector3.Distance (player.transform.position, transform.position + new Vector3 (0, 3.0f, 0)) < 0.01) {
 						player.transform.parent = platform;
 					} else {
-						player.GetComponent<CharControllerTest> ().ContinueMove ();
+						player.GetComponent<CharController3> ().ContinueMove ();
 					}
 				}
 				moving = true;
@@ -75,7 +76,7 @@ public class TreeController2 : MonoBehaviour {
 					moving = false;
 					growing = true;
 					if (player != null) {
-						player.GetComponent<CharControllerTest>().ContinueMove();
+						player.GetComponent<CharController3>().ContinueMove();
 						player.transform.parent = null;
 					}
 					platform.GetComponent<MeshRenderer>().enabled = false;
