@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class CharController3 : MonoBehaviour {
+	public bool paused;
 
 	public Transform checkFront;
 	public Transform checkRight;
@@ -42,69 +43,46 @@ public class CharController3 : MonoBehaviour {
 	{
 		Debug.DrawRay (transform.position, transform.forward * 5f, Color.green);
 
-		RaycastHit hit;
-		if (Physics.Raycast (checkFront.position, -transform.up, out hit) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
-			endPosArray [0] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
-		} else {
-			endPosArray[0] = imposVec;
+		if (!paused) {
+			RaycastHit hit;
+			if (Physics.Raycast (checkFront.position, -transform.up, out hit, 1.5f) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
+				endPosArray [0] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
+			} else {
+				endPosArray [0] = imposVec;
+			}
+			if (Physics.Raycast (checkRight.position, -transform.up, out hit, 1.5f) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
+				endPosArray [1] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
+			} else {
+				endPosArray [1] = imposVec;
+			}
+			if (Physics.Raycast (checkLeft.position, -transform.up, out hit, 1.5f) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
+				endPosArray [2] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
+			} else {
+				endPosArray [2] = imposVec;
+			}
+			if (Physics.Raycast (checkBack.position, -transform.up, out hit, 1.5f) && !Physics.Raycast (checkFront.position, -transform.up, 1.5f) && !Physics.Raycast (checkRight.position, -transform.up, 1.5f) && !Physics.Raycast (checkLeft.position, -transform.up, 1.5f) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
+				endPos = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
+				currentAngle += addedAngle [3];
+				transform.rotation = Quaternion.Euler (new Vector3 (0f, currentAngle, 0f));
+			}
+
+			transform.position = Vector3.MoveTowards (transform.position, endPos, Time.deltaTime * moveSpeed);
+
+			for (int i = 0; i < endPosArray.Length; i++) {
+				if (endPosArray [i] != imposVec)
+					counter++;
+			}
+
+			if (counter == 0) {
+
+			} else if (counter == 1) {
+				SimpleMove ();
+				counter = 0;
+			} else {
+				RandomMove ();
+				counter = 0;
+			}
 		}
-		if (Physics.Raycast (checkRight.position, -transform.up, out hit) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
-			endPosArray [1] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
-		} else {
-			endPosArray[1] = imposVec;
-		}
-		if (Physics.Raycast (checkLeft.position, -transform.up, out hit) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
-			endPosArray [2] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
-		} else {
-			endPosArray[2] = imposVec;
-		}
-		if (Physics.Raycast (checkBack.position, -transform.up, out hit) && !Physics.Raycast (checkFront.position, -transform.up, out hit) && !Physics.Raycast (checkRight.position, -transform.up, out hit) && !Physics.Raycast (checkLeft.position, -transform.up, out hit) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
-			endPos = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
-			currentAngle += addedAngle[3];
-			transform.rotation = Quaternion.Euler(new Vector3(0f,currentAngle,0f));
-		}
-//		if (Physics.Raycast (checkBack.position, -transform.up, out hit) && Vector3.Distance (transform.position, endPos) < moveSpeed * Time.deltaTime) {
-//			endPosArray [3] = new Vector3 (Mathf.Round (hit.point.x), transform.position.y, Mathf.Round (hit.point.z));
-//		} else {
-//			endPosArray[3] = transform.position;
-//		}
-
-		transform.position = Vector3.MoveTowards (transform.position, endPos, Time.deltaTime * moveSpeed);
-
-		for (int i = 0; i < endPosArray.Length; i++) {
-			if (endPosArray[i] != imposVec)
-				counter++;
-		}
-
-		if (counter == 0) {
-
-		} else if (counter == 1) {
-			SimpleMove ();
-			counter = 0;
-		} else {
-			RandomMove ();
-			counter = 0;
-		}
-
-
-
-//		switch (counter) 
-//		{
-//		case 0:
-//			break;
-//		case 1:
-//			SimpleMove ();
-//			break;
-//		case 2:
-//			RandomMove ();
-//			break;
-//		case 3:
-//			RandomMove ();
-//			break;
-//		case 4:
-//			RandomMove ();
-//			break;
-//		}
 	}
 
 
@@ -131,4 +109,15 @@ public class CharController3 : MonoBehaviour {
 		transform.rotation = Quaternion.Euler(new Vector3(0f, currentAngle, 0f));
 	}
 
+	public void PauseMove() {
+		paused = true;
+		transform.position = new Vector3 (Mathf.Round (transform.position.x), transform.position.y, Mathf.Round (transform.position.z));
+		endPos = new Vector3 (Mathf.Round (transform.position.x), transform.position.y, Mathf.Round (transform.position.z));
+	}
+
+	public void ContinueMove() {
+		paused = false;
+		transform.position = new Vector3 (Mathf.Round (transform.position.x), transform.position.y, Mathf.Round (transform.position.z));
+		endPos = new Vector3 (Mathf.Round (transform.position.x), transform.position.y, Mathf.Round (transform.position.z));
+	}
 }
